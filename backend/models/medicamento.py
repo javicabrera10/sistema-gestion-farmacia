@@ -1,6 +1,5 @@
 from database import db
 
-
 class Medicamento(db.Model):
     __tablename__ = "medicamentos"
 
@@ -15,3 +14,13 @@ class Medicamento(db.Model):
         db.ForeignKey("categorias.id"),
         nullable=False
     )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "precio": self.precio,
+            "stock": self.stock,
+            "fecha_vencimiento": self.fecha_vencimiento.strftime("%Y-%m-%d") if self.fecha_vencimiento else None,
+            "categoria_id": self.categoria_id
+        }
