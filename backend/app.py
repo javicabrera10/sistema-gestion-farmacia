@@ -9,6 +9,8 @@ from models.medicamento import Medicamento
 from models.empleado import Empleado
 
 from routes.medicamento_routes import medicamentos_bp
+from routes.categoria_routes import categoria_bp
+from routes.empleado_routes import empleado_bp
 
 
 def create_app():
@@ -23,6 +25,8 @@ def create_app():
 
     # Registrar Blueprints
     app.register_blueprint(medicamentos_bp)
+    app.register_blueprint(categoria_bp)
+    app.register_blueprint(empleado_bp)
 
     # Crear las tablas
     with app.app_context():
