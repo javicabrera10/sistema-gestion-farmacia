@@ -1,7 +1,11 @@
+import re
+
 from flask import jsonify, request
 
 from database import db
 from models.empleado import Empleado
+
+EMAIL_REGEX = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 def obtener_empleados():
@@ -57,6 +61,11 @@ def crear_empleado():
     if not nombre or not apellido or not dni or not email or not cargo:
         return jsonify({
             "error": "Todos los campos son obligatorios"
+        }), 400
+
+    if not EMAIL_REGEX.match(str(email).strip()):
+        return jsonify({
+            "error": "El email no es válido"
         }), 400
 
     empleado_existente = Empleado.query.filter(
@@ -116,6 +125,11 @@ def actualizar_empleado(id):
     if not nombre or not apellido or not dni or not email or not cargo:
         return jsonify({
             "error": "Todos los campos son obligatorios"
+        }), 400
+
+    if not EMAIL_REGEX.match(str(email).strip()):
+        return jsonify({
+            "error": "El email no es válido"
         }), 400
 
     empleado_existente = Empleado.query.filter(
