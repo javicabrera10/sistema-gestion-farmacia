@@ -1,3 +1,4 @@
+
 from flask import Blueprint
 
 from controllers.empleado_controller import (
@@ -32,7 +33,7 @@ def agregar_empleado():
 
 
 @empleado_bp.route("/<int:id>", methods=["PUT"])
-def modificar_empleado(id):
+def editar_empleado(id):
     return actualizar_empleado(id)
 
 

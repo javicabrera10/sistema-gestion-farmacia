@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask_cors import CORS
 
@@ -12,20 +13,23 @@ from routes.medicamento_routes import medicamentos_bp
 from routes.categoria_routes import categoria_bp
 from routes.empleado_routes import empleado_bp
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Permitir CORS desde cualquier origen para evitar bloqueos del navegador
+# Inicializar extensiones
+db.init_app(app)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-db.init_app(app)
-
-# Registro de rutas con el prefijo /api
+# Registrar Blueprints
 app.register_blueprint(medicamentos_bp, url_prefix="/api")
-app.register_blueprint(categoria_bp, url_prefix="/api")
-app.register_blueprint(empleado_bp, url_prefix="/api")
+app.register_blueprint(categoria_bp)
+app.register_blueprint(empleado_bp)
+
+# Crear las tablas
+with app.app_context():
+    db.create_all()
+
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     app.run(debug=True, port=5000)
