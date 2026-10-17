@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -12,7 +12,6 @@ import {
   IconButton,
   Paper,
   Snackbar,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -43,11 +42,13 @@ function Categorias() {
     tipo: "success",
   });
 
-  useEffect(() => {
-    cargarCategorias();
+  // 1️⃣ mostrarNotificacion PRIMERO (lo usan las demás funciones)
+  const mostrarNotificacion = useCallback((mensaje, tipo = "success") => {
+    setNotificacion({ abierto: true, mensaje, tipo });
   }, []);
 
-  async function cargarCategorias() {
+  // 2️⃣ cargarCategorias después (depende de mostrarNotificacion)
+  const cargarCategorias = useCallback(async () => {
     setCargando(true);
 
     try {
@@ -64,15 +65,12 @@ function Categorias() {
     } finally {
       setCargando(false);
     }
-  }
+  }, [mostrarNotificacion]);
 
-  function mostrarNotificacion(mensaje, tipo = "success") {
-    setNotificacion({
-      abierto: true,
-      mensaje,
-      tipo,
-    });
-  }
+  // 3️⃣ useEffect AL FINAL (ya puede referenciar a cargarCategorias)
+  useEffect(() => {
+    cargarCategorias();
+  }, [cargarCategorias]);
 
   function abrirFormulario(categoria = null) {
     setCategoriaEditando(categoria);
@@ -126,7 +124,13 @@ function Categorias() {
         throw new Error(datos.error || "No se pudo guardar la categoría");
       }
 
-      cerrarFormulario();
+      // ⚠️ Cerramos el modal manualmente (no con cerrarFormulario,
+      // porque "guardando" aún vale true y cerrarFormulario haría return).
+      setModalAbierto(false);
+      setCategoriaEditando(null);
+      setNombre("");
+      setErrorFormulario("");
+
       await cargarCategorias();
 
       mostrarNotificacion(
