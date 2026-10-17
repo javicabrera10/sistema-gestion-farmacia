@@ -62,3 +62,23 @@ def eliminar_medicamento(id):
     except Exception as e:
         db.session.rollback()
         return {"error": str(e)}, 400
+
+def obtener_resumen_dashboard():
+    medicamentos = Medicamento.query.all()
+    total_productos = len(medicamentos)
+    
+    # Calcular stock total e inventario valorizado
+    stock_total = sum(m.stock for m in medicamentos)
+    valor_inventario = sum(m.precio * m.stock for m in medicamentos)
+    
+    # Alerta de stock crítico (por ejemplo, menos de 5 unidades)
+    stock_critico = [m.to_dict() for m in medicamentos if m.stock <= 5]
+    
+    resumen = {
+        "total_productos": total_productos,
+        "stock_total": stock_total,
+        "valor_inventario": round(valor_inventario, 2),
+        "alertas_stock": stock_critico,
+        "total_alertas": len(stock_critico)
+    }
+    return resumen, 200
