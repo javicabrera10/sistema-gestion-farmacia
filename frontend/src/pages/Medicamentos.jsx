@@ -122,7 +122,7 @@ export default function Medicamentos() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
         <Typography variant="h4" fontWeight="bold">
           Gestión de Medicamentos
         </Typography>
@@ -186,7 +186,7 @@ export default function Medicamentos() {
             {editingId ? "Editar Medicamento" : "Agregar Medicamento"}
           </DialogTitle>
           <DialogContent>
-            <Box display="flex" flexDirection="column" gap={2} mt={1}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
               <TextField
                 label="Nombre"
                 name="nombre"

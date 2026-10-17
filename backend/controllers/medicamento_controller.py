@@ -1,6 +1,8 @@
 from datetime import datetime
 from database import db
 from models.medicamento import Medicamento
+from models.categoria import Categoria
+from models.empleado import Empleado
 
 def obtener_medicamentos():
     medicamentos = Medicamento.query.all()
@@ -76,6 +78,8 @@ def obtener_resumen_dashboard():
     
     resumen = {
         "total_productos": total_productos,
+        "total_categorias": Categoria.query.count(),
+        "total_empleados": Empleado.query.count(),
         "stock_total": stock_total,
         "valor_inventario": round(valor_inventario, 2),
         "alertas_stock": stock_critico,
