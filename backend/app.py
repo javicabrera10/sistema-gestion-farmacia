@@ -9,28 +9,23 @@ from models.medicamento import Medicamento
 from models.empleado import Empleado
 
 from routes.medicamento_routes import medicamentos_bp
+from routes.categoria_routes import categoria_bp
+from routes.empleado_routes import empleado_bp
 
+app = Flask(__name__)
+app.config.from_object(Config)
 
-def create_app():
-    app = Flask(__name__)
+# Permitir CORS desde cualquier origen para evitar bloqueos del navegador
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    # Cargar configuración
-    app.config.from_object(Config)
+db.init_app(app)
 
-    # Inicializar extensiones
-    db.init_app(app)
-    CORS(app)
-
-    # Registrar Blueprints
-    app.register_blueprint(medicamentos_bp)
-
-    # Crear las tablas
-    with app.app_context():
-        db.create_all()
-
-    return app
-
+# Registro de rutas con el prefijo /api
+app.register_blueprint(medicamentos_bp, url_prefix="/api")
+app.register_blueprint(categoria_bp, url_prefix="/api")
+app.register_blueprint(empleado_bp, url_prefix="/api")
 
 if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True, port=5000)
