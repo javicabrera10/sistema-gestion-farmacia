@@ -23,8 +23,8 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Registrar Blueprints
 app.register_blueprint(medicamentos_bp, url_prefix="/api")
-app.register_blueprint(categoria_bp)
-app.register_blueprint(empleado_bp)
+app.register_blueprint(categoria_bp, url_prefix="/api")
+app.register_blueprint(empleado_bp, url_prefix="/api")
 
 # Crear las tablas
 with app.app_context():
